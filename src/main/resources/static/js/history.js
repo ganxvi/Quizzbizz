@@ -27,7 +27,7 @@ const History = {
                 <td>${a.score}/${a.totalQuestions}</td>
                 <td>${a.percentage}%</td>
                 <td>${new Date(a.startedAt).toLocaleString()}</td>
-                <td>${a.completedAt ? '^.^ Completed' : '>.< In progress'}</td>
+                <td>${a.completedAt ? '✅ Completed' : '⏳ In progress'}</td>
               </tr>
             `).join('')}
           </tbody>

@@ -15,6 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -23,6 +26,45 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final GoogleTokenVerifierService googleTokenVerifierService;
+
+    /**
+     * Handles "Continue with Google" sign-in/sign-up. Verifies the ID token Google issued
+     * after the user picked their Gmail account, then finds the matching user or creates a
+     * brand-new one — written to the exact same `users` table as normal registrations, so it
+     * shows up in the database and survives restarts just like any other account.
+     */
+    public AuthResponse loginWithGoogle(String idToken) {
+        GoogleTokenVerifierService.GoogleUserInfo googleUser = googleTokenVerifierService.verify(idToken);
+
+        User user = userRepository.findByUsername(googleUser.email())
+                .orElseGet(() -> {
+                    User newUser = User.builder()
+                            .username(googleUser.email()) // email doubles as the unique username for Google accounts
+                            .email(googleUser.email())
+                            .password(passwordEncoder.encode(generateRandomPassword())) // unguessable; user never needs it
+                            .role(Role.USER)
+                            .authProvider("GOOGLE")
+                            .build();
+                    return userRepository.save(newUser);
+                });
+
+        UserPrincipal principal = new UserPrincipal(user);
+        String token = jwtService.generateToken(principal);
+
+        return AuthResponse.builder()
+                .token(token)
+                .userId(user.getId())
+                .username(user.getUsername())
+                .role(user.getRole().name())
+                .build();
+    }
+
+    private String generateRandomPassword() {
+        byte[] bytes = new byte[24];
+        new SecureRandom().nextBytes(bytes);
+        return Base64.getEncoder().encodeToString(bytes);
+    }
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {

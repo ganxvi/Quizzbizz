@@ -118,7 +118,7 @@ const TakeQuiz = {
 
       const banner = document.getElementById('feedbackBanner');
       banner.innerHTML = `<div class="feedback-banner ${result.correct ? 'correct' : 'incorrect'}">
-        ${result.correct ? '✅ Correct!' : '❌ Incorrect.'}
+        ${result.correct ? 'Correct!' : ' Incorrect.'}
       </div>`;
 
       const isLast = this.state.currentIndex === this.state.quiz.questions.length - 1;

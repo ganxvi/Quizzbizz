@@ -47,6 +47,9 @@ app:
   jwt:
     secret: "ThisIsADemoSecretKeyForQuizAppPleaseChangeInProduction123456"
     expiration-ms: 86400000   # 24 hours
-
+  
+  google:
+    client-id: "726758184032-3nsr7sncthlnlt527r8nbgv525t9ruis.apps.googleusercontent.com"   # paste your Google OAuth Client ID here (from Google Cloud Console)
+    
   cors:
     allowed-origins: "*"

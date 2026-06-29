@@ -9,12 +9,17 @@ import java.util.List;
 
 @Data
 public class QuizCreateRequest {
+
     @NotBlank
     private String title;
 
     private String description;
+
+    @NotBlank
     private String topic;
-    private String difficulty; // EASY / MEDIUM / HARD
+
+    private String difficulty;
+
     private int timeLimitSeconds;
 
     @NotEmpty
@@ -23,8 +28,10 @@ public class QuizCreateRequest {
 
     @Data
     public static class QuestionCreateRequest {
+
         @NotBlank
         private String title;
+
         private boolean multipleAnswers;
 
         @NotEmpty
@@ -34,8 +41,10 @@ public class QuizCreateRequest {
 
     @Data
     public static class OptionCreateRequest {
+
         @NotBlank
         private String text;
+
         private boolean correct;
     }
 }

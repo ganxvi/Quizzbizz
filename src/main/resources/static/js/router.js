@@ -34,15 +34,32 @@ const Router = {
 };
 
 function renderNav() {
-  const navEl = document.getElementById('navLinks');
+  const navLinksEl = document.getElementById('navLinks');
+  const navUserEl = document.getElementById('navUser');
+
   if (!Auth.isLoggedIn()) {
-    navEl.innerHTML = `<a href="#/login">Log In</a><a href="#/register">Register</a>`;
+    navLinksEl.innerHTML = `<a href="#/">Home</a>`;
+    navUserEl.innerHTML = `<a href="#/login">Log In</a><a href="#/register">Sign Up</a>`;
     return;
   }
+
   const user = Auth.currentUser();
-  let links = `<a href="#/quizzes">Quizzes</a><a href="#/history">History</a><a href="#/leaderboard">Leaderboard</a>`;
-  if (Auth.isAdmin()) links += `<a href="#/admin">Manage Quizzes</a>`;
-  links += `<span class="muted" style="color:#fff;opacity:0.85;">Hi, ${escapeHtml(user.username)}</span>`;
-  links += `<button onclick="Auth.logout()">Log Out</button>`;
-  navEl.innerHTML = links;
+  const currentHash = location.hash || '#/quizzes';
+
+  const links = [
+    { href: '#/', label: 'Home' },
+    { href: '#/quizzes', label: 'Quizzes' },
+    { href: '#/history', label: 'History' },
+    { href: '#/leaderboard', label: 'Leaderboard' },
+  ];
+  if (Auth.isAdmin()) links.push({ href: '#/admin', label: 'Manage Quizzes' });
+
+  navLinksEl.innerHTML = links.map(l =>
+    `<a href="${l.href}" class="${currentHash === l.href ? 'active' : ''}">${l.label}</a>`
+  ).join('');
+
+  navUserEl.innerHTML = `
+    <span class="muted" style="font-weight:600;">Hi, ${escapeHtml(user.username)}</span>
+    <button onclick="Auth.logout()">Log Out</button>
+  `;
 }

@@ -1,6 +1,7 @@
 package com.quizapp.controller;
 
 import com.quizapp.dto.AuthResponse;
+import com.quizapp.dto.GoogleAuthRequest;
 import com.quizapp.dto.LoginRequest;
 import com.quizapp.dto.RegisterRequest;
 import com.quizapp.service.AuthService;
@@ -25,4 +26,9 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> googleAuth(@Valid @RequestBody GoogleAuthRequest request) {
+        return ResponseEntity.ok(authService.loginWithGoogle(request.getIdToken()));
+    }   
+    
 }

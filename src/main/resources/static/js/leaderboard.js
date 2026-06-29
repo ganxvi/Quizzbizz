@@ -31,7 +31,7 @@ const Leaderboard = {
           <tbody>
             ${entries.map(e => `
               <tr>
-                <td>${e.rank === 1 ? '^.^' : e.rank === 2 ? '^^.^^' : e.rank === 3 ? '^^^.^^^' : e.rank}</td>
+                <td>${e.rank === 1 ? '🥇' : e.rank === 2 ? '🥈' : e.rank === 3 ? '🥉' : e.rank}</td>
                 <td>${escapeHtml(e.username)}</td>
                 <td>${e.bestScore}/${e.totalQuestions}</td>
                 <td>${e.averagePercentage}%</td>

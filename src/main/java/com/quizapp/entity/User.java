@@ -27,9 +27,15 @@ public class User {
     @Column(nullable = false, length = 100)
     private String email;
 
-    /** BCrypt-hashed password (hashing + salting handled by Spring Security's PasswordEncoder) */
-    @Column(nullable = false)
+    /** BCrypt-hashed password (hashing + salting handled by Spring Security's PasswordEncoder).
+     *  Nullable for accounts created via Google Sign-In that never set a local password. */
+    @Column(nullable = true)
     private String password;
+
+    /** "LOCAL" for username/password accounts, "GOOGLE" for Google Sign-In accounts. */
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private String authProvider = "LOCAL";
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
